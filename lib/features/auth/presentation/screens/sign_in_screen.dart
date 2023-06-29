@@ -100,10 +100,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   FilledButton(
-                    onPressed: state is SignInInProgress ? null : _signIn,
+                    // onPressed: state is SignInInProgress ? null : _signIn,
+                    onPressed: () => context.go('/'),
                     child: const Text('Iniciar sesion'),
                   ),
-                  MaterialButton(
+                  TextButton(
                     onPressed: () => context.push(SignUpScreen.routeName),
                     child: const Text('Crear una cuenta nueva'),
                   ),

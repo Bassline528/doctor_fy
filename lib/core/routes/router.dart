@@ -4,6 +4,7 @@ import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart
 import 'package:doctor_fy/features/chat/presentation/screens/chat_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/error_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/splash_screen.dart';
+import 'package:doctor_fy/features/user/presentation/screens/configuraciones_screen.dart';
 import 'package:doctor_fy/features/user/presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,6 +18,10 @@ final router = GoRouter(
         GoRoute(
           path: 'chat',
           builder: (context, state) => const ChatPage(),
+        ),
+        GoRoute(
+          path: 'settings',
+          builder: (context, state) => const ConfiguracionesScreen(),
         ),
       ],
     ),

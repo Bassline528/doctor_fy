@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 final lightTheme = ThemeData(
   useMaterial3: true,
   colorScheme: lightColorScheme,
+  navigationBarTheme: NavigationBarThemeData(
+    indicatorColor: lightColorScheme.onPrimary,
+    elevation: 1,
+  ),
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.symmetric(
       horizontal: 10,
@@ -43,6 +47,10 @@ final lightTheme = ThemeData(
 final darkTheme = ThemeData(
   useMaterial3: true,
   colorScheme: darkColorScheme,
+  navigationBarTheme: NavigationBarThemeData(
+    indicatorColor: darkColorScheme.onPrimary,
+    elevation: 1,
+  ),
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.symmetric(
       horizontal: 10,
