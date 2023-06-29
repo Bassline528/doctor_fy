@@ -1,4 +1,4 @@
-import 'package:doctor_fy/core/themes/color_schemes.dart';
+import 'package:doctor_fy/core/helpers/terms_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -32,7 +32,7 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
       body: SettingsList(
         sections: [
           SettingsSection(
-            title: Text('Acceso'),
+            title: const Text('Acceso'),
             tiles: <SettingsTile>[
               SettingsTile.switchTile(
                 onToggle: (value) {
@@ -42,7 +42,7 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
                 },
                 initialValue: _useBiometric,
                 leading: const FaIcon(FontAwesomeIcons.fingerprint),
-                title: Text('Acceso biométrico'),
+                title: const Text('Acceso biométrico'),
               ),
             ],
           ),
@@ -56,10 +56,12 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
                   });
                 },
                 initialValue: _useNotifications,
-                leading: Icon(_useNotifications
-                    ? Icons.notifications
-                    : Icons.notifications_off),
-                title: Text('Recibir notificaciones'),
+                leading: Icon(
+                  _useNotifications
+                      ? Icons.notifications
+                      : Icons.notifications_off,
+                ),
+                title: const Text('Recibir notificaciones'),
               ),
             ],
           ),
@@ -67,11 +69,11 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
             title: const Text('Cuenta'),
             tiles: <SettingsTile>[
               SettingsTile.navigation(
-                onPressed: (context) {},
-                leading: FaIcon(
+                onPressed: showTerms,
+                leading: const FaIcon(
                   FontAwesomeIcons.book,
                 ),
-                title: Text(
+                title: const Text(
                   'Términos y condiciones',
                 ),
               ),
@@ -81,8 +83,8 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
                   FontAwesomeIcons.user,
                   color: Theme.of(context).colorScheme.error,
                 ),
-                trailing: FaIcon(
-                  FontAwesomeIcons.ban,
+                trailing: Icon(
+                  Icons.delete_forever_outlined,
                   color: Theme.of(context).colorScheme.error,
                 ),
                 title: Text(

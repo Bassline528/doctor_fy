@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -72,6 +73,22 @@ class ProfileScreen extends StatelessWidget {
             trailing: const Icon(Icons.arrow_forward_ios),
             title: const Text('Configuraciones'),
             onTap: () => context.push('/settings'),
+          ),
+          Spacer(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Cerrar sesión'),
+            onTap: () async {
+              final result = await showOkCancelAlertDialog(
+                context: context,
+                title: 'Cerrar sesión',
+                message: '¿Estás seguro de cerrar sesión?',
+                okLabel: 'Si',
+                cancelLabel: 'No',
+              );
+
+              if (result == OkCancelResult.ok) context.go('/sign_in');
+            },
           ),
         ],
       ),

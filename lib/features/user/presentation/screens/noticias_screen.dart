@@ -1,3 +1,4 @@
+import 'package:doctor_fy/core/widgets/no_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,7 +13,7 @@ class _NoticiasScreenState extends State<NoticiasScreen> {
 
   @override
   void initState() {
-    _hasNews = true;
+    _hasNews = false;
     super.initState();
   }
 
@@ -23,20 +24,12 @@ class _NoticiasScreenState extends State<NoticiasScreen> {
       child: Scaffold(
         body: _hasNews
             ? AvailableNews()
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.newspaper,
-                      size: 100.sp,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('No tienes noticias por el momento'),
-                  ],
+            : NoDataToShow(
+                child: FaIcon(
+                  FontAwesomeIcons.newspaper,
+                  size: 100.sp,
                 ),
+                noDataText: 'No tienes noticias por el momento',
               ),
       ),
     );
