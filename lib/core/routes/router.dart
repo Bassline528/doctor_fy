@@ -1,6 +1,7 @@
 import 'package:doctor_fy/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:doctor_fy/features/chat/presentation/screens/categorias_screens.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/private_chat_screen.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/professionals_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/error_screen.dart';
@@ -23,6 +24,10 @@ final router = GoRouter(
         GoRoute(
           path: ConfiguracionesScreen.routeName,
           builder: (context, state) => const ConfiguracionesScreen(),
+        ),
+        GoRoute(
+          path: CategoriasScreen.routeName,
+          builder: (context, state) => const CategoriasScreen(),
         ),
         GoRoute(
           path: ProfessionalsScreen.routeName,

@@ -1,3 +1,4 @@
+import 'package:doctor_fy/features/chat/presentation/screens/consultas_screen.dart';
 import 'package:doctor_fy/features/user/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 

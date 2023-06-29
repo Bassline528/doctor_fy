@@ -8,7 +8,10 @@ environment:
 
 dependencies:
   adaptive_dialog: ^1.9.0-0
+  audioplayers: ^4.1.0
   bloc: ^8.1.2
+  cached_network_image: ^3.2.3
+  chat_bubbles: ^1.4.1
   cupertino_icons: ^1.0.5
   dartz: ^0.10.1
   dio: ^5.2.1+1

@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:doctor_fy/features/chat/presentation/screens/private_chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -103,7 +104,9 @@ class _ProfessionalsScreenState extends State<ProfessionalsScreen> {
                                       );
 
                                       if (result == OkCancelResult.ok) {
-                                        context.go('/chat');
+                                        context.go(
+                                          '/${PrivateChatScreen.routeName}',
+                                        );
                                       }
                                     },
                                     icon:
