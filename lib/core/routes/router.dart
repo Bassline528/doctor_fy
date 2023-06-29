@@ -1,34 +1,56 @@
+import 'package:doctor_fy/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
-import 'package:doctor_fy/features/chat/presentation/screens/chat_screen.dart';
+import 'package:doctor_fy/features/chat/presentation/screens/categorias_screens.dart';
+import 'package:doctor_fy/features/chat/presentation/screens/private_chat_screen.dart';
+import 'package:doctor_fy/features/chat/presentation/screens/professionals_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/error_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/splash_screen.dart';
+import 'package:doctor_fy/features/user/presentation/screens/configuraciones_screen.dart';
 import 'package:doctor_fy/features/user/presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
+  initialLocation: SplashScreen.routeName,
   routes: [
+    GoRoute(
+      path: HomeScreen.routeName,
+      builder: (context, state) => HomeScreen(),
+      routes: [
+        GoRoute(
+          path: PrivateChatScreen.routeName,
+          builder: (context, state) => PrivateChatScreen(),
+        ),
+        GoRoute(
+          path: ConfiguracionesScreen.routeName,
+          builder: (context, state) => const ConfiguracionesScreen(),
+        ),
+        GoRoute(
+          path: CategoriasScreen.routeName,
+          builder: (context, state) => const CategoriasScreen(),
+        ),
+        GoRoute(
+          path: ProfessionalsScreen.routeName,
+          builder: (context, state) => const ProfessionalsScreen(),
+        ),
+      ],
+    ),
     GoRoute(
       path: SplashScreen.routeName,
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
-      path: HomeScreen.routeName,
-      builder: (context, state) => HomeScreen(),
-    ),
-    GoRoute(
       path: SignInScreen.routeName,
-      builder: (context, state) => SignInScreen(),
+      builder: (context, state) => const SignInScreen(),
     ),
     GoRoute(
       path: SignUpScreen.routeName,
-      builder: (context, state) => SignUpScreen(),
+      builder: (context, state) => const SignUpScreen(),
     ),
-    //TEMP ROUTE
     GoRoute(
-      path: '/chat',
-      builder: (context, state) => ChatPage(),
-    ),
+      path: ForgotPasswordScreen.routeName,
+      builder: (context, state) => const ForgotPasswordScreen(),
+    )
   ],
   errorBuilder: (context, state) => const ErrorScreen(),
 );

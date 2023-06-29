@@ -8,7 +8,7 @@ class ErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('ERROR!'),
+        child: Text('404!'),
       ),
     );
   }
