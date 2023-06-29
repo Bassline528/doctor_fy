@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,11 +16,11 @@ class ProfileScreen extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: 50.r,
-              child: Icon(Icons.image),
+              child: const Icon(Icons.image),
             ),
           ),
           SizedBox(
-            height: 30.h,
+            height: 20.h,
           ),
           SizedBox(
             width: 300.w,
@@ -55,21 +56,21 @@ class ProfileScreen extends StatelessWidget {
             height: 10.h,
           ),
           ListTile(
-            leading: Icon(Icons.edit),
-            trailing: Icon(Icons.arrow_forward_ios),
-            title: Text('Editar perfil'),
+            leading: const Icon(Icons.edit),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('Editar perfil'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.medical_information),
-            trailing: Icon(Icons.arrow_forward_ios),
-            title: Text('Historial médico'),
+            leading: const FaIcon(FontAwesomeIcons.fileMedical),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('Historial médico'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            trailing: Icon(Icons.arrow_forward_ios),
-            title: Text('Configuraciones'),
+            leading: const Icon(Icons.settings),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('Configuraciones'),
             onTap: () => context.push('/settings'),
           ),
         ],
