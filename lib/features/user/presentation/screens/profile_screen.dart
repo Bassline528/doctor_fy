@@ -17,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: 50.r,
-              child: const Icon(Icons.image),
+              child: const Icon(Icons.edit),
             ),
           ),
           SizedBox(
@@ -55,12 +55,6 @@ class ProfileScreen extends StatelessWidget {
           ),
           SizedBox(
             height: 10.h,
-          ),
-          ListTile(
-            leading: const Icon(Icons.edit),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('Editar perfil'),
-            onTap: () {},
           ),
           ListTile(
             leading: const FaIcon(FontAwesomeIcons.fileMedical),

@@ -1,6 +1,8 @@
+import 'package:doctor_fy/features/chat/presentation/screens/professionals_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class ConsultasScreen extends StatelessWidget {
   @override
@@ -50,7 +52,9 @@ class ConsultasScreen extends StatelessWidget {
                         ),
                         titleText: 'Telemedicina 24/7',
                         subtitleText: 'Acceso a medicos las 24 horas',
-                        onTap: () {},
+                        onTap: () {
+                          context.push('/${ProfessionalsScreen.routeName}');
+                        },
                       ),
                       _CategoryCard(
                         leading: const FaIcon(

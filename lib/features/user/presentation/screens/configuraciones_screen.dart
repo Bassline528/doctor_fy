@@ -6,7 +6,7 @@ import 'package:settings_ui/settings_ui.dart';
 class ConfiguracionesScreen extends StatefulWidget {
   const ConfiguracionesScreen({super.key});
 
-  static const routeName = '/settings';
+  static const routeName = 'settings';
 
   @override
   State<ConfiguracionesScreen> createState() => _ConfiguracionesScreenState();
@@ -75,6 +75,14 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
                 ),
                 title: const Text(
                   'Términos y condiciones',
+                ),
+              ),
+              SettingsTile.navigation(
+                leading: const Icon(
+                  Icons.medical_information,
+                ),
+                title: const Text(
+                  'Planes de suscripción',
                 ),
               ),
               SettingsTile.navigation(

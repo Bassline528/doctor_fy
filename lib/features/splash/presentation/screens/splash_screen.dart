@@ -1,6 +1,5 @@
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/blocs/session_shecker/session_checker_bloc.dart';
-import 'package:doctor_fy/features/user/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +7,7 @@ import 'package:go_router/go_router.dart';
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  static const routeName = '/';
+  static const routeName = '/splash';
 
   @override
   Widget build(BuildContext context) {
