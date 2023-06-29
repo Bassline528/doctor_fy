@@ -1,3 +1,4 @@
+import 'package:doctor_fy/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/chat_screen.dart';
@@ -7,28 +8,34 @@ import 'package:doctor_fy/features/user/presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
+  initialLocation: '/splash',
   routes: [
     GoRoute(
-      path: SplashScreen.routeName,
+      path: '/',
+      builder: (context, state) => HomeScreen(),
+      routes: [
+        GoRoute(
+          path: 'chat',
+          builder: (context, state) => const ChatPage(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/splash',
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
-      path: HomeScreen.routeName,
-      builder: (context, state) => HomeScreen(),
+      path: '/sign_in',
+      builder: (context, state) => const SignInScreen(),
     ),
     GoRoute(
-      path: SignInScreen.routeName,
-      builder: (context, state) => SignInScreen(),
+      path: '/sign_up',
+      builder: (context, state) => const SignUpScreen(),
     ),
     GoRoute(
-      path: SignUpScreen.routeName,
-      builder: (context, state) => SignUpScreen(),
-    ),
-    //TEMP ROUTE
-    GoRoute(
-      path: '/chat',
-      builder: (context, state) => ChatPage(),
-    ),
+      path: '/forgot',
+      builder: (context, state) => const ForgotPasswordScreen(),
+    )
   ],
   errorBuilder: (context, state) => const ErrorScreen(),
 );
