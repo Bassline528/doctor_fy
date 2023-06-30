@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/blocs/session_shecker/session_checker_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -37,18 +40,25 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SessionCheckerBloc, SessionCheckerState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is SessionChecked) {
           if (state.isLogged) {
-            context.go('/chat');
+            context.go('/');
           } else {
-            context.go(SignInScreen.routeName);
+            final prefs = await SharedPreferences.getInstance();
+            final firstTime = prefs.getBool('firstTime');
+            if (firstTime == null) {
+              await prefs.setBool('firstTime', true);
+              context.go('/onboarding');
+            } else {
+              context.go(SignInScreen.routeName);
+            }
           }
         }
       },
       child: const Scaffold(
         body: Center(
-          child: Text('App'),
+          child: CircularProgressIndicator.adaptive(),
         ),
       ),
     );

@@ -79,7 +79,9 @@ class _AvailableChats extends StatelessWidget {
                 style: TextStyle(fontSize: 10.sp),
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              context.push('/chat');
+            },
           ),
         ],
       ),
