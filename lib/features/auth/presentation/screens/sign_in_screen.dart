@@ -19,13 +19,14 @@ class _SignInScreenState extends State<SignInScreen> {
   late GlobalKey<FormState> _formKey;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  late bool _passwordOscure;
 
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-
+    _passwordOscure = true;
     super.initState();
   }
 
@@ -61,7 +62,6 @@ class _SignInScreenState extends State<SignInScreen> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is SignInSuccess) {
-                //TODO: SHOW SNACKBAR MESSAGE
                 context.pushReplacement('/chat');
               }
             },
@@ -80,8 +80,22 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Contraseña'),
-                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Contraseña',
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _passwordOscure = !_passwordOscure;
+                          });
+                        },
+                        icon: Icon(
+                          _passwordOscure
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
+                    ),
+                    obscureText: _passwordOscure,
                   ),
                   Align(
                     alignment: Alignment.centerRight,
@@ -98,9 +112,15 @@ class _SignInScreenState extends State<SignInScreen> {
                     onPressed: () => context.go('/'),
                     child: const Text('Iniciar sesion'),
                   ),
-                  TextButton(
-                    onPressed: () => context.push(SignUpScreen.routeName),
-                    child: const Text('Crear una cuenta nueva'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('¿No tienes una cuenta?'),
+                      TextButton(
+                        onPressed: () => context.push(SignUpScreen.routeName),
+                        child: const Text('Crea ahora'),
+                      ),
+                    ],
                   ),
                 ],
               );

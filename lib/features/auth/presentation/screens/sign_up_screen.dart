@@ -173,6 +173,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   DropdownButtonFormField<String>(
                     value: _selectedSex,
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Required';
+                      }
+                      return null;
+                    },
                     items: _sexs.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -213,6 +219,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   IntlPhoneField(
                     controller: _phoneNumberController,
+                    validator: (p0) {
+                      if (p0 == null) {
+                        return 'Required';
+                      }
+
+                      return null;
+                    },
                     pickerDialogStyle: PickerDialogStyle(
                       searchFieldInputDecoration:
                           const InputDecoration(hintText: 'Buscar'),
@@ -263,12 +276,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: state is SignUpInProgress ? null : _signUp,
                     child: const Text('Register'),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: const Text('I already have an account'),
-                  )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('¿Ya tienes una cuenta?'),
+                      TextButton(
+                        onPressed: () => context.pop(),
+                        child: const Text('Inicia sesión'),
+                      ),
+                    ],
+                  ),
                 ],
               );
             },
