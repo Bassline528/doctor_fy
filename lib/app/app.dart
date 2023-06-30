@@ -24,6 +24,8 @@ class App extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, _) {
           return MaterialApp.router(
+            title: 'Doctorfy',
+            debugShowCheckedModeBanner: false,
             theme: lightTheme,
             darkTheme: darkTheme,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
