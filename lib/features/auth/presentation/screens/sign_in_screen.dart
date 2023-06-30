@@ -68,13 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
             builder: (context, state) {
               return ListView(
                 children: [
-                  SizedBox(
-                    height: 40.h,
-                  ),
                   const DoctorFy(),
-                  SizedBox(
-                    height: 40.h,
-                  ),
                   TextFormField(
                     controller: _emailController,
                     decoration:

@@ -43,9 +43,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: ListView(
             children: [
               const DoctorFy(),
-              SizedBox(
-                height: 40.h,
-              ),
               TextFormField(
                 controller: _emailController,
                 decoration:

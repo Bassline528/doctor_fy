@@ -103,9 +103,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               return ListView(
                 children: [
                   const DoctorFy(),
-                  SizedBox(
-                    height: 40.h,
-                  ),
                   TextFormField(
                     controller: _namesControlles,
                     decoration: const InputDecoration(

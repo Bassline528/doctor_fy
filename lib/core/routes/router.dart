@@ -1,4 +1,5 @@
 import 'package:doctor_fy/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:doctor_fy/features/auth/presentation/screens/onboarding_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/categorias_screens.dart';
@@ -38,6 +39,10 @@ final router = GoRouter(
     GoRoute(
       path: SplashScreen.routeName,
       builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => OnBoarding(),
     ),
     GoRoute(
       path: SignInScreen.routeName,
