@@ -188,10 +188,9 @@ packages:
   chat_bubbles:
     dependency: "direct main"
     description:
-      name: chat_bubbles
-      sha256: e972985286ecbc738dd7b39383f593939df30fe4a9142be741b23f1ac6e424ed
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/chat_bubbles"
+      relative: true
+    source: path
     version: "1.4.1"
   checked_yaml:
     dependency: transitive
@@ -1314,6 +1313,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.5"
+  swipe_to:
+    dependency: "direct main"
+    description:
+      name: swipe_to
+      sha256: "6274e148a02b32dfa8ae8634c9aa6196bf5bc2d88653650abd11d2eb52fc5e29"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   synchronized:
     dependency: transitive
     description:

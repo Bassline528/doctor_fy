@@ -2,9 +2,11 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:swipe_to/swipe_to.dart';
 
 enum AttachmentType { image, video, file, location }
 
@@ -19,12 +21,27 @@ class PrivateChatScreen extends StatefulWidget {
 }
 
 class _PrivateChatScreenState extends State<PrivateChatScreen> {
+  late TextEditingController _messageController;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = const Duration();
   Duration position = const Duration();
   bool isPlaying = false;
   bool isLoading = false;
   bool isPause = false;
+
+  bool isReplying = false;
+
+  @override
+  void initState() {
+    _messageController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,165 +76,177 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
           ),
         ],
       ),
-      body: Stack(
+      body: Column(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                BubbleNormalImage(
-                  id: 'id001',
-                  image: _image(),
-                  color: Colors.purpleAccent,
-                  delivered: true,
-                ),
-                BubbleNormalAudio(
-                  color: const Color(0xFFE8E8EE),
-                  duration: duration.inSeconds.toDouble(),
-                  position: position.inSeconds.toDouble(),
-                  isPlaying: isPlaying,
-                  isLoading: isLoading,
-                  isPause: isPause,
-                  onSeekChanged: _changeSeek,
-                  onPlayPauseButtonClick: _playAudio,
-                  sent: true,
-                ),
-                BubbleNormal(
-                  text: 'bubble normal with tail',
-                  isSender: false,
-                  color: const Color(0xFF1B97F3),
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  DateChip(
+                    date: DateTime(now.year, now.month, now.day - 2),
+                    color: context.theme.colorScheme.surface,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onSurface,
+                    ),
                   ),
-                ),
-                BubbleNormal(
-                  text: 'bubble normal with tail',
-                  color: const Color(0xFFE8E8EE),
-                  sent: true,
-                ),
-                DateChip(
-                  date: DateTime(now.year, now.month, now.day - 2),
-                ),
-                BubbleNormal(
-                  text: 'bubble normal without tail',
-                  isSender: false,
-                  color: const Color(0xFF1B97F3),
-                  tail: false,
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                  BubbleNormalImage(
+                    id: 'id001',
+                    image: _image(),
+                    color: context.theme.colorScheme.secondary,
+                    delivered: true,
                   ),
-                ),
-                BubbleNormal(
-                  text: 'bubble normal without tail',
-                  color: const Color(0xFFE8E8EE),
-                  tail: false,
-                  sent: true,
-                  seen: true,
-                  delivered: true,
-                ),
-                const BubbleSpecialOne(
-                  text: 'bubble special one with tail',
-                  isSender: false,
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                  BubbleNormalAudio(
+                    color: context.theme.colorScheme.secondary,
+                    duration: duration.inSeconds.toDouble(),
+                    position: position.inSeconds.toDouble(),
+                    playColor: context.theme.colorScheme.onSecondary,
+                    isPlaying: isPlaying,
+                    isLoading: isLoading,
+                    isPause: isPause,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    onSeekChanged: _changeSeek,
+                    onPlayPauseButtonClick: _playAudio,
+                    sent: true,
                   ),
-                ),
-                DateChip(
-                  date: DateTime(now.year, now.month, now.day - 1),
-                ),
-                const BubbleSpecialOne(
-                  text: 'bubble special one with tail',
-                  color: Color(0xFFE8E8EE),
-                  seen: true,
-                ),
-                const BubbleSpecialOne(
-                  text: 'bubble special one without tail',
-                  isSender: false,
-                  tail: false,
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
+                  BubbleNormal(
+                    text: 'Hola rey',
+                    color: context.theme.colorScheme.primary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    isSender: false,
                   ),
-                ),
-                const BubbleSpecialOne(
-                  text: 'bubble special one without tail',
-                  tail: false,
-                  color: Color(0xFFE8E8EE),
-                  sent: true,
-                ),
-                const BubbleSpecialTwo(
-                  text: 'bubble special tow with tail',
-                  isSender: false,
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
+                  SwipeTo(
+                    onRightSwipe: () {
+                      setState(() {
+                        isReplying = true;
+                      });
+                    },
+                    child: BubbleNormal(
+                      text: 'Hola que tal',
+                      color: context.theme.colorScheme.secondary,
+                      textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        color: context.theme.colorScheme.onSecondary,
+                      ),
+                      delivered: true,
+                      seen: true,
+                      sent: true,
+                    ),
                   ),
-                ),
-                DateChip(
-                  date: now,
-                ),
-                const BubbleSpecialTwo(
-                  text: 'bubble special tow with tail',
-                  color: Color(0xFFE8E8EE),
-                  sent: true,
-                ),
-                const BubbleSpecialTwo(
-                  text: 'bubble special tow without tail',
-                  isSender: false,
-                  tail: false,
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
+                  BubbleNormal(
+                    text: 'Hola rey',
+                    color: context.theme.colorScheme.primary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    isSender: false,
                   ),
-                ),
-                const BubbleSpecialTwo(
-                  text: 'bubble special tow without tail',
-                  tail: false,
-                  color: Color(0xFFE8E8EE),
-                  delivered: true,
-                ),
-                const BubbleSpecialThree(
-                  text: 'bubble special three without tail',
-                  color: Color(0xFF1B97F3),
-                  tail: false,
-                  textStyle: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                const BubbleSpecialThree(
-                  text: 'bubble special three with tail',
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                const BubbleSpecialThree(
-                  text: 'bubble special three without tail',
-                  color: Color(0xFFE8E8EE),
-                  tail: false,
-                  isSender: false,
-                ),
-                const BubbleSpecialThree(
-                  text: 'bubble special three with tail',
-                  color: Color(0xFFE8E8EE),
-                  isSender: false,
-                ),
-                const SizedBox(
-                  height: 100,
-                )
-              ],
+                  BubbleNormal(
+                    text: 'Hola rey',
+                    color: context.theme.colorScheme.primary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    isSender: false,
+                  ),
+                  BubbleNormal(
+                    text: 'Hola rey',
+                    color: context.theme.colorScheme.primary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    isSender: false,
+                  ),
+                  BubbleNormal(
+                    text: 'Hola rey',
+                    color: context.theme.colorScheme.primary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    isSender: false,
+                  ),
+                  BubbleNormal(
+                    text: 'Hola rey',
+                    color: context.theme.colorScheme.primary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onPrimary,
+                    ),
+                    isSender: false,
+                  ),
+                  BubbleNormal(
+                    text: 'Hola que tal',
+                    color: context.theme.colorScheme.secondary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onSecondary,
+                    ),
+                    delivered: true,
+                    seen: true,
+                    sent: true,
+                  ),
+                  BubbleNormal(
+                    text: 'Hola que tal',
+                    color: context.theme.colorScheme.secondary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onSecondary,
+                    ),
+                    delivered: true,
+                    seen: true,
+                    sent: true,
+                  ),
+                  BubbleNormal(
+                    text: 'Hola que tal',
+                    color: context.theme.colorScheme.secondary,
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.theme.colorScheme.onSecondary,
+                    ),
+                    delivered: true,
+                    seen: true,
+                    sent: true,
+                  ),
+                ],
+              ),
             ),
           ),
           MessageBar(
-            onSend: print,
-            replying: true,
-            sendButtonColor: Theme.of(context).primaryColor,
-            replyWidgetColor: Theme.of(context).colorScheme.surface,
-            replyIconColor: Theme.of(context).colorScheme.onSurface,
-            replyCloseColor: Theme.of(context).colorScheme.onSurface,
-            messageBarColor: Theme.of(context).colorScheme.surface,
+            onSend: (text) {
+              if (text.isNotEmpty) {
+                _messageController.clear();
+              }
+            },
+            onAudioPressed: () {
+              print('audio pressed');
+            },
+            onTapCloseReply: () {
+              setState(() {
+                isReplying = false;
+              });
+            },
+            replying: isReplying,
+            controller: _messageController,
+            hintText: 'Escribe un mensaje',
+            sendButtonColor: context.theme.colorScheme.primary,
+            sendButtonIconColor: context.theme.colorScheme.onPrimary,
+            replyWidgetColor: context.theme.colorScheme.surface,
+            replyIconColor: context.theme.colorScheme.onSurface,
+            replyCloseColor: context.theme.colorScheme.onSurface,
+            messageBarColor: context.theme.colorScheme.surface,
+            onTextChanged: (value) {
+              setState(() {});
+            },
             actions: [
               IconButton(
                 onPressed: _attachmentModal,
