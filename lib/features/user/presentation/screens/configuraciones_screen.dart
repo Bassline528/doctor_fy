@@ -77,14 +77,14 @@ class _ConfiguracionesScreenState extends State<ConfiguracionesScreen> {
                   'Términos y condiciones',
                 ),
               ),
-              SettingsTile.navigation(
-                leading: const Icon(
-                  Icons.medical_information,
-                ),
-                title: const Text(
-                  'Planes de suscripción',
-                ),
-              ),
+              // SettingsTile.navigation(
+              //   leading: const Icon(
+              //     Icons.medical_information,
+              //   ),
+              //   title: const Text(
+              //     'Planes de suscripción',
+              //   ),
+              // ),
               SettingsTile.navigation(
                 onPressed: (context) {},
                 leading: FaIcon(

@@ -8,7 +8,22 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
+    on<SignOut>((event, emit) async {
+      emit(SignOutInProgress());
+      try {
+        await supabase.auth.signOut();
+      } on AuthException catch (e) {
+        emit(SignOutError(e.message));
+      } catch (_) {
+        emit(const SignOutError('Unexpected error'));
+      } finally {
+        emit(AuthInitial());
+      }
+      emit(AuthInitial());
+    });
+
     on<SignInWithEmailAndPassword>((event, emit) async {
+      emit(SignInInProgress());
       try {
         final response = await supabase.auth.signInWithPassword(
           email: event.email,
@@ -27,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final email = event.email;
       final password = event.password;
       final username = event.username;
+      emit(SignUpInProgress());
       try {
         await supabase.auth.signUp(
           email: email,

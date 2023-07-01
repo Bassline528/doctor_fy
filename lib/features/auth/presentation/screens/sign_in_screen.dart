@@ -1,10 +1,12 @@
 import 'package:doctor_fy/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/widgets/doctor_fy_component.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -26,6 +28,9 @@ class _SignInScreenState extends State<SignInScreen> {
     _formKey = GlobalKey<FormState>();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    //SOLO PARA PRUEBAS TODO: BORRAR
+    _emailController.text = 'user2@user.com';
+    _passwordController.text = 'hola123';
     _passwordOscure = true;
     super.initState();
   }
@@ -58,11 +63,29 @@ class _SignInScreenState extends State<SignInScreen> {
           horizontal: 20,
         ),
         child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is SignInSuccess) {
-                context.pushReplacement('/chat');
+                context.loaderOverlay.hide();
+                context.pushReplacement('/');
+                return;
+              }
+
+              if (state is SignInInProgress) {
+                context.loaderOverlay.show();
+                return;
+              }
+
+              if (state is SignInError) {
+                context.loaderOverlay.hide();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                  ),
+                );
+                return;
               }
             },
             builder: (context, state) {
@@ -71,6 +94,15 @@ class _SignInScreenState extends State<SignInScreen> {
                   const DoctorFy(),
                   TextFormField(
                     controller: _emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese su correo electrónico';
+                      }
+                      // else if (EmailValidator.validate(value)) {
+                      //   return 'Por favor ingrese un correo electrónico válido';
+                      // }
+                      return null;
+                    },
                     decoration:
                         const InputDecoration(labelText: 'Correo electrónico'),
                     keyboardType: TextInputType.emailAddress,
@@ -80,6 +112,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   TextFormField(
                     controller: _passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese su contraseña';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
                       suffixIcon: IconButton(
@@ -108,8 +146,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   FilledButton(
-                    // onPressed: state is SignInInProgress ? null : _signIn,
-                    onPressed: () => context.go('/'),
+                    onPressed: state is SignInInProgress ? null : _signIn,
+                    // onPressed: () => context.go('/'),
                     child: const Text('Iniciar sesion'),
                   ),
                   Row(

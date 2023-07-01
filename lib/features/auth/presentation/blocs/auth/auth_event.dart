@@ -32,3 +32,5 @@ class SignUpWithEmailAndPassword extends AuthEvent {
   @override
   List<Object> get props => [email, password, username];
 }
+
+class SignOut extends AuthEvent {}
