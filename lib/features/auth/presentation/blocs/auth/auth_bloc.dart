@@ -47,7 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await supabase.auth.signUp(
           email: email,
           password: password,
-          data: {'username': username},
+          data: {'username': 'user1'},
         );
 
         emit(SignUpSuccess());

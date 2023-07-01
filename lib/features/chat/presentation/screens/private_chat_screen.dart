@@ -3,24 +3,40 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
+import 'package:doctor_fy/features/chat/presentation/blocs/private_chat/private_chat_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 enum AttachmentType { image, video, file, location }
 
-class PrivateChatScreen extends StatefulWidget {
+class PrivateChatScreen extends StatelessWidget {
   const PrivateChatScreen({
     super.key,
   });
   static const String routeName = 'chat';
 
   @override
-  State<PrivateChatScreen> createState() => _PrivateChatScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => PrivateChatBloc(),
+      child: PrivateChatView(),
+    );
+  }
 }
 
-class _PrivateChatScreenState extends State<PrivateChatScreen> {
+class PrivateChatView extends StatefulWidget {
+  const PrivateChatView({
+    super.key,
+  });
+
+  @override
+  State<PrivateChatView> createState() => _PrivateChatViewState();
+}
+
+class _PrivateChatViewState extends State<PrivateChatView> {
   late TextEditingController _messageController;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = const Duration();
@@ -79,73 +95,106 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  DateChip(
-                    date: DateTime(now.year, now.month, now.day - 2),
-                    color: context.theme.colorScheme.surface,
-                    textStyle: TextStyle(
-                      fontSize: 14.sp,
-                      color: context.theme.colorScheme.onSurface,
+            child: BlocBuilder<PrivateChatBloc, PrivateChatState>(
+              builder: (context, state) {
+                if (state.messages.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No hay mensajes',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  // BubbleNormalImage(
-                  //   id: 'id001',
-                  //   image: _image(),
-                  //   color: context.theme.colorScheme.secondary,
-                  //   delivered: true,
-                  // ),
-                  // BubbleNormalAudio(
-                  //   color: context.theme.colorScheme.secondary,
-                  //   duration: duration.inSeconds.toDouble(),
-                  //   position: position.inSeconds.toDouble(),
-                  //   playColor: context.theme.colorScheme.onSecondary,
-                  //   isPlaying: isPlaying,
-                  //   isLoading: isLoading,
-                  //   isPause: isPause,
-                  //   textStyle: TextStyle(
-                  //     fontSize: 14.sp,
-                  //     color: context.theme.colorScheme.onPrimary,
-                  //   ),
-                  //   onSeekChanged: _changeSeek,
-                  //   onPlayPauseButtonClick: _playAudio,
-                  //   sent: true,
-                  // ),
-                  BubbleNormal(
-                    text: 'Hola rey',
-                    color: context.theme.colorScheme.primary,
-                    textStyle: TextStyle(
-                      fontSize: 14.sp,
-                      color: context.theme.colorScheme.onPrimary,
-                    ),
-                    isSender: false,
-                  ),
-                  SwipeTo(
-                    onRightSwipe: () {
-                      setState(() {
-                        isReplying = true;
-                      });
-                    },
-                    child: BubbleNormal(
-                      text: 'Hola que tal',
-                      color: context.theme.colorScheme.secondary,
+                  );
+                }
+                return SingleChildScrollView(
+                  child: Column(
+                      children: List.generate(
+                    state.messages.length,
+                    (index) => BubbleNormal(
+                      text: state.messages[index].content,
+                      color: context.theme.colorScheme.primary,
                       textStyle: TextStyle(
                         fontSize: 14.sp,
-                        color: context.theme.colorScheme.onSecondary,
+                        color: context.theme.colorScheme.onPrimary,
                       ),
-                      delivered: true,
-                      seen: true,
-                      sent: true,
+                      isSender: state.messages[index].isMine,
                     ),
-                  ),
-                ],
-              ),
+                  )
+                      // <Widget>[
+
+                      // DateChip(
+                      //   date: DateTime(now.year, now.month, now.day - 2),
+                      //   color: context.theme.colorScheme.surface,
+                      //   textStyle: TextStyle(
+                      //     fontSize: 14.sp,
+                      //     color: context.theme.colorScheme.onSurface,
+                      //   ),
+                      // ),
+                      // BubbleNormalImage(
+                      //   id: 'id001',
+                      //   image: _image(),
+                      //   color: context.theme.colorScheme.secondary,
+                      //   delivered: true,
+                      // ),
+                      // BubbleNormalAudio(
+                      //   color: context.theme.colorScheme.secondary,
+                      //   duration: duration.inSeconds.toDouble(),
+                      //   position: position.inSeconds.toDouble(),
+                      //   playColor: context.theme.colorScheme.onSecondary,
+                      //   isPlaying: isPlaying,
+                      //   isLoading: isLoading,
+                      //   isPause: isPause,
+                      //   textStyle: TextStyle(
+                      //     fontSize: 14.sp,
+                      //     color: context.theme.colorScheme.onPrimary,
+                      //   ),
+                      //   onSeekChanged: _changeSeek,
+                      //   onPlayPauseButtonClick: _playAudio,
+                      //   sent: true,
+                      // ),
+                      // BubbleNormal(
+                      //   text: 'Hola rey',
+                      //   color: context.theme.colorScheme.primary,
+                      //   textStyle: TextStyle(
+                      //     fontSize: 14.sp,
+                      //     color: context.theme.colorScheme.onPrimary,
+                      //   ),
+                      //   isSender: false,
+                      // ),
+                      // SwipeTo(
+                      //   onRightSwipe: () {
+                      //     setState(() {
+                      //       isReplying = true;
+                      //     });
+                      //   },
+                      //   child: BubbleNormal(
+                      //     text: 'Hola que tal',
+                      //     color: context.theme.colorScheme.secondary,
+                      //     textStyle: TextStyle(
+                      //       fontSize: 14.sp,
+                      //       color: context.theme.colorScheme.onSecondary,
+                      //     ),
+                      //     delivered: true,
+                      //     seen: true,
+                      //     sent: true,
+                      //   ),
+                      // ),
+                      // ],
+                      ),
+                );
+              },
             ),
           ),
           MessageBar(
             onSend: (text) {
               if (text.isNotEmpty) {
+                context.read<PrivateChatBloc>().add(
+                      PrivateChatSendMessage(
+                        message: _messageController.text,
+                      ),
+                    );
                 _messageController.clear();
               }
             },

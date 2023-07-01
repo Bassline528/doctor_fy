@@ -23,4 +23,14 @@ class Message {
   final bool isMine;
 
   /// Returns a new [Message] instance from a JSON object
+
+  factory Message.fromMap(Map<String, dynamic> map, String myUserId) {
+    return Message(
+      id: map['id'] as String,
+      profileId: map['profile_id'] as String,
+      content: map['content'] as String,
+      createdAt: DateTime.parse(map['created_at'] as String),
+      isMine: map['profile_id'] == myUserId,
+    );
+  }
 }
