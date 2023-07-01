@@ -1,13 +1,16 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
-import 'package:doctor_fy/features/chat/presentation/blocs/private_chat/private_chat_bloc.dart';
+import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 enum AttachmentType { image, video, file, location }
@@ -21,7 +24,7 @@ class PrivateChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PrivateChatBloc(),
+      create: (context) => ChatCubit(),
       child: PrivateChatView(),
     );
   }
@@ -95,9 +98,20 @@ class _PrivateChatViewState extends State<PrivateChatView> {
       body: Column(
         children: [
           Expanded(
-            child: BlocBuilder<PrivateChatBloc, PrivateChatState>(
+            child: BlocConsumer<ChatCubit, ChatState>(
+              listener: (context, state) {
+                if (state is ChatInitial) {
+                  context.loaderOverlay.show();
+                } else {
+                  context.loaderOverlay.hide();
+                }
+
+                if (state is ChatError) {
+                  context.showErrorSnackBar(message: state.message);
+                }
+              },
               builder: (context, state) {
-                if (state.messages.isEmpty) {
+                if (state is ChatEmpty) {
                   return Center(
                     child: Text(
                       'No hay mensajes',
@@ -107,21 +121,23 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                       ),
                     ),
                   );
-                }
-                return SingleChildScrollView(
-                  child: Column(
+                } else if (state is ChatLoaded) {
+                  return SingleChildScrollView(
+                    child: Column(
                       children: List.generate(
-                    state.messages.length,
-                    (index) => BubbleNormal(
-                      text: state.messages[index].content,
-                      color: context.theme.colorScheme.primary,
-                      textStyle: TextStyle(
-                        fontSize: 14.sp,
-                        color: context.theme.colorScheme.onPrimary,
-                      ),
-                      isSender: state.messages[index].isMine,
-                    ),
-                  )
+                        state.messages.length,
+                        (index) => BubbleNormal(
+                          text: state.messages[index].content,
+                          color: state.messages[index].isMine
+                              ? context.theme.colorScheme.primary
+                              : context.theme.colorScheme.secondary,
+                          textStyle: TextStyle(
+                            fontSize: 14.sp,
+                            color: context.theme.colorScheme.onPrimary,
+                          ),
+                          isSender: state.messages[index].isMine,
+                        ),
+                      )
                       // <Widget>[
 
                       // DateChip(
@@ -182,51 +198,57 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                       //   ),
                       // ),
                       // ],
-                      ),
-                );
+                      ,
+                    ),
+                  );
+                } else if (state is ChatError) {
+                  return Center(child: Text(state.message));
+                }
+                throw UnimplementedError();
               },
             ),
           ),
-          MessageBar(
-            onSend: (text) {
-              if (text.isNotEmpty) {
-                context.read<PrivateChatBloc>().add(
-                      PrivateChatSendMessage(
-                        message: _messageController.text,
-                      ),
-                    );
-                _messageController.clear();
-              }
-            },
-            onAudioPressed: () {
-              print('audio pressed');
-            },
-            onTapCloseReply: () {
-              setState(() {
-                isReplying = false;
-              });
-            },
-            replying: isReplying,
-            controller: _messageController,
-            hintText: 'Escribe un mensaje',
-            sendButtonColor: context.theme.colorScheme.primary,
-            sendButtonIconColor: context.theme.colorScheme.onPrimary,
-            replyWidgetColor: context.theme.colorScheme.surface,
-            replyIconColor: context.theme.colorScheme.onSurface,
-            replyCloseColor: context.theme.colorScheme.onSurface,
-            messageBarColor: context.theme.colorScheme.surface,
-            onTextChanged: (value) {
-              setState(() {});
-            },
-            actions: [
-              IconButton(
-                onPressed: _attachmentModal,
-                icon: const Icon(
-                  Icons.add,
+          if (context.watch<ChatCubit>().state is ChatError)
+            Container()
+          else
+            MessageBar(
+              onSend: (text) {
+                if (text.isNotEmpty) {
+                  context.read<ChatCubit>().sendMessage(
+                        _messageController.text,
+                      );
+                  _messageController.clear();
+                }
+              },
+              onAudioPressed: () {
+                print('audio pressed');
+              },
+              onTapCloseReply: () {
+                setState(() {
+                  isReplying = false;
+                });
+              },
+              replying: isReplying,
+              controller: _messageController,
+              hintText: 'Escribe un mensaje',
+              sendButtonColor: context.theme.colorScheme.primary,
+              sendButtonIconColor: context.theme.colorScheme.onPrimary,
+              replyWidgetColor: context.theme.colorScheme.surface,
+              replyIconColor: context.theme.colorScheme.onSurface,
+              replyCloseColor: context.theme.colorScheme.onSurface,
+              messageBarColor: context.theme.colorScheme.surface,
+              onTextChanged: (value) {
+                setState(() {});
+              },
+              actions: [
+                IconButton(
+                  onPressed: _attachmentModal,
+                  icon: const Icon(
+                    Icons.add,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );
