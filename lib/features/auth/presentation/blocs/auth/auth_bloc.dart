@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:doctor_fy/core/constants/constants.dart';
+import 'package:doctor_fy/features/auth/data/models/sign_up_request.dart';
 import 'package:equatable/equatable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -39,15 +42,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<SignUpWithEmailAndPassword>((event, emit) async {
-      final email = event.email;
-      final password = event.password;
-      final username = event.username;
       emit(SignUpInProgress());
+      final request = event.signUpRequest;
       try {
         await supabase.auth.signUp(
-          email: email,
-          password: password,
-          data: {'username': 'user1'},
+          email: request.email,
+          password: request.password,
+          data: request.toMap(),
         );
 
         emit(SignUpSuccess());
