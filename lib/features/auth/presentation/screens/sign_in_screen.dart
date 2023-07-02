@@ -87,6 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [
                   const DoctorFy(),
                   TextFormField(
+                    textInputAction: TextInputAction.next,
                     controller: _emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -106,6 +107,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   TextFormField(
                     controller: _passwordController,
+                    textInputAction: TextInputAction.done,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor ingrese su contraseña';

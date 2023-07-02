@@ -109,14 +109,23 @@ class BubbleNormal extends StatelessWidget {
                         ? EdgeInsets.fromLTRB(12, 6, 28, 6)
                         : EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: isSender
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
                         Text(
                           text,
                           style: textStyle,
                           textAlign: TextAlign.left,
                         ),
-                        Text(time),
+                        Text(
+                          time,
+                          style: TextStyle(
+                            color: isSender
+                                ? Theme.of(context).colorScheme.onSecondary
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
                       ],
                     ),
                   ),

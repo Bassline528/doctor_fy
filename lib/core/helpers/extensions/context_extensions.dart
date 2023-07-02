@@ -14,11 +14,15 @@ extension ShowSnackBar on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(
       content: Text(message),
       backgroundColor: backgroundColor,
+      showCloseIcon: true,
     ));
   }
 
   /// Displays a red snackbar indicating error
   void showErrorSnackBar({required String message}) {
-    showSnackBar(message: message, backgroundColor: Colors.red);
+    showSnackBar(
+      message: message,
+      backgroundColor: Theme.of(this).colorScheme.error,
+    );
   }
 }

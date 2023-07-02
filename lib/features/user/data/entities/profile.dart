@@ -8,13 +8,32 @@ class Profile {
     required this.gender,
     required this.ci,
     required this.createdAt,
+    this.avatarUrl,
   });
+
+  /// Returns a new [Profile] instance from a JSON object
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      id: json['id'] as String,
+      username: json['username'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      fullName: json['fullname'] as String,
+      birthDate: DateTime.parse(json['birthdate'] as String),
+      ci: json['ci'] as String,
+      gender: json['genero'] as String,
+      phoneNumber: json['phonenumber'] as String,
+      avatarUrl: json['avatar_url'] as String?,
+    );
+  }
 
   /// User ID of the profile
   final String id;
 
   /// Username of the profile
   final String username;
+
+  /// Avatar url of the profile
+  final String? avatarUrl;
 
   /// Full name of the profile
   final String fullName;
@@ -33,20 +52,4 @@ class Profile {
 
   /// Date and time when the profile was created
   final DateTime createdAt;
-
-  /// Returns a new [Profile] instance from a JSON object
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
-      id: json['id'] as String,
-      username: json['username'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      fullName: json['fullname'] as String,
-      birthDate: DateTime.parse(json['birthdate'] as String),
-      ci: json['ci'] as String,
-      gender: json['genero'] as String,
-      phoneNumber: json['phonenumber'] as String,
-    );
-  }
-
-  /// Returns a JSON object from a [Profile] instance
 }

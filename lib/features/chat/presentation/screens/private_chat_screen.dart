@@ -122,13 +122,9 @@ class _PrivateChatViewState extends State<PrivateChatView> {
               },
               builder: (context, state) {
                 if (state is ChatEmpty) {
-                  return Center(
+                  return const Center(
                     child: Text(
-                      'No hay mensajes',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Toda buena conversación empieza con un hola! :)',
                     ),
                   );
                 } else if (state is ChatLoaded) {

@@ -50,6 +50,7 @@ class ChatCubit extends Cubit<ChatState> {
       profileId: _myUserId,
       content: text,
       createdAt: DateTime.now(),
+      type: MessageType.texto,
       isMine: true,
     );
     //insert last
