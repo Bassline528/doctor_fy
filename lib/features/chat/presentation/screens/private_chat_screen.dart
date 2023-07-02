@@ -12,19 +12,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:swipe_to/swipe_to.dart';
+import 'package:timeago/timeago.dart';
 
 enum AttachmentType { image, video, file, location }
 
 class PrivateChatScreen extends StatelessWidget {
   const PrivateChatScreen({
     super.key,
+    required this.roomId,
   });
   static const String routeName = 'chat';
+
+  final String roomId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChatCubit(),
+      create: (context) => ChatCubit()..setMessagesListener(roomId),
       child: PrivateChatView(),
     );
   }
@@ -136,6 +140,10 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                             color: context.theme.colorScheme.onPrimary,
                           ),
                           isSender: state.messages[index].isMine,
+                          time: format(
+                            state.messages[index].createdAt,
+                            locale: 'en_short',
+                          ),
                         ),
                       )
                       // <Widget>[

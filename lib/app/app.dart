@@ -1,5 +1,6 @@
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/core/routes/router.dart';
+import 'package:doctor_fy/features/chat/presentation/blocs/profiles/profiles_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:doctor_fy/core/themes/themes.dart';
 import 'package:doctor_fy/features/auth/presentation/blocs/auth/auth_bloc.dart';
@@ -19,6 +20,9 @@ class App extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthBloc(),
         ),
+        BlocProvider(
+          create: (context) => ProfilesCubit(),
+        )
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),

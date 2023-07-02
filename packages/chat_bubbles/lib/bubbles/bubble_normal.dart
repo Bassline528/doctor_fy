@@ -22,6 +22,7 @@ class BubbleNormal extends StatelessWidget {
   final bool sent;
   final bool delivered;
   final bool seen;
+  final String time;
   final TextStyle? textStyle;
 
   BubbleNormal({
@@ -35,6 +36,7 @@ class BubbleNormal extends StatelessWidget {
     this.delivered = false,
     this.seen = false,
     this.textStyle,
+    required this.time,
   }) : super(key: key);
 
   ///chat bubble builder method
@@ -126,6 +128,9 @@ class BubbleNormal extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(width: 12),
+        Text(time),
+        const SizedBox(width: 60),
       ],
     );
   }

@@ -45,6 +45,7 @@ dependencies:
   shimmer: ^3.0.0
   supabase_flutter: ^1.10.4
   swipe_to: ^1.0.2
+  timeago: ^3.4.0
 
 dev_dependencies:
   bloc_test: ^9.1.1

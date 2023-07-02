@@ -19,8 +19,10 @@ final router = GoRouter(
       builder: (context, state) => HomeScreen(),
       routes: [
         GoRoute(
-          path: PrivateChatScreen.routeName,
-          builder: (context, state) => PrivateChatScreen(),
+          path: '/chat/:id',
+          builder: (context, state) => PrivateChatScreen(
+            roomId: state.pathParameters['fid']!,
+          ),
         ),
         GoRoute(
           path: ConfiguracionesScreen.routeName,
