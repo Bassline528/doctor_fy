@@ -7,10 +7,8 @@ import 'package:doctor_fy/features/chat/presentation/screens/categorias_screens.
 import 'package:doctor_fy/features/user/data/entities/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:timeago/timeago.dart';
 
 class ConsultasScreen extends StatelessWidget {
@@ -20,10 +18,7 @@ class ConsultasScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RoomCubit()..initializeRooms(context),
-      child: const RoomsView(),
-    );
+    return RoomsView();
   }
 }
 
@@ -52,25 +47,33 @@ class RoomsView extends StatelessWidget {
       ),
       body: BlocConsumer<RoomCubit, RoomState>(
         listener: (context, state) {
-          if (state is RoomsLoading) {
-            context.loaderOverlay.show();
-          } else {
-            context.loaderOverlay.hide();
-          }
-
           if (state is RoomsError) {
             context.showErrorSnackBar(message: state.message);
           }
         },
         builder: (context, state) {
           if (state is RoomsEmpty) {
-            return const NoDataToShow(
-              noDataText: 'No hay chats disponibles, empieza una consulta!',
-              child: Icon(
-                Icons.chat_bubble_outlined,
-                size: 100,
-              ),
+            final newUsers = state.newUsers;
+            return Column(
+              children: [
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: _NewUsers(newUsers: newUsers),
+                // ),
+                Expanded(
+                  child: const NoDataToShow(
+                    noDataText:
+                        'No hay chats disponibles, empieza una consulta!',
+                    child: Icon(
+                      Icons.chat_bubble_outlined,
+                      size: 100,
+                    ),
+                  ),
+                ),
+              ],
             );
+          } else if (state is RoomsLoading) {
+            return preloader;
           } else if (state is RoomsError) {
             return const NoDataToShow(
               noDataText: 'Ocurrio un error al cargar los chats',
@@ -88,7 +91,7 @@ class RoomsView extends StatelessWidget {
                   final profiles = state.profiles;
                   return Column(
                     children: [
-                      _NewUsers(newUsers: newUsers),
+                      // _NewUsers(newUsers: newUsers),
                       Expanded(
                         child: ListView.builder(
                           itemCount: rooms.length,
@@ -97,7 +100,10 @@ class RoomsView extends StatelessWidget {
                             final otherUser = profiles[room.otherUserId];
 
                             return ListTile(
-                              onTap: () => context.push('/chat/${room.id}'),
+                              onTap: () => context.push(
+                                '/chat/${room.id}',
+                                extra: otherUser,
+                              ),
                               leading: CircleAvatar(
                                 child: otherUser == null
                                     ? preloader

@@ -39,9 +39,9 @@ class Profile {
     return Profile(
       id: json['id'] as String,
       username: json['username'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      fullName: json['fullName'] as String,
-      birthDate: DateTime.parse(json['birthDate'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String),
+      fullName: json['fullname'] as String,
+      birthDate: DateTime.parse(json['birthdate'] as String),
       ci: json['ci'] as String,
       gender: json['genero'] as String,
       phoneNumber: json['phonenumber'] as String,

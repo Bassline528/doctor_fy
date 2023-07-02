@@ -25,7 +25,7 @@ class ChatCubit extends Cubit<ChatState> {
         .from('messages')
         .stream(primaryKey: ['id'])
         .eq('room_id', roomId)
-        .order('created_at')
+        .order('created_at', ascending: true)
         .map<List<Message>>(
           (data) => data
               .map<Message>(
@@ -52,7 +52,8 @@ class ChatCubit extends Cubit<ChatState> {
       createdAt: DateTime.now(),
       isMine: true,
     );
-    _messages.insert(0, message);
+    //insert last
+    _messages.add(message);
     emit(ChatLoaded(_messages));
 
     try {

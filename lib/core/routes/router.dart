@@ -7,6 +7,7 @@ import 'package:doctor_fy/features/chat/presentation/screens/private_chat_screen
 import 'package:doctor_fy/features/chat/presentation/screens/professionals_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/error_screen.dart';
 import 'package:doctor_fy/features/splash/presentation/screens/splash_screen.dart';
+import 'package:doctor_fy/features/user/data/entities/profile.dart';
 import 'package:doctor_fy/features/user/presentation/screens/configuraciones_screen.dart';
 import 'package:doctor_fy/features/user/presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -19,10 +20,14 @@ final router = GoRouter(
       builder: (context, state) => HomeScreen(),
       routes: [
         GoRoute(
-          path: '/chat/:id',
-          builder: (context, state) => PrivateChatScreen(
-            roomId: state.pathParameters['fid']!,
-          ),
+          path: 'chat/:id',
+          builder: (context, state) {
+            Profile otherUserProfile = state.extra as Profile;
+            return PrivateChatScreen(
+              otherUserProfile: otherUserProfile,
+              roomId: state.pathParameters['id']!,
+            );
+          },
         ),
         GoRoute(
           path: ConfiguracionesScreen.routeName,

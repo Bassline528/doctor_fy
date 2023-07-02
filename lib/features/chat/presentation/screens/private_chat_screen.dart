@@ -4,8 +4,11 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:doctor_fy/core/constants/constants.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
+import 'package:doctor_fy/features/user/data/entities/profile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,16 +23,20 @@ class PrivateChatScreen extends StatelessWidget {
   const PrivateChatScreen({
     super.key,
     required this.roomId,
+    required this.otherUserProfile,
   });
   static const String routeName = 'chat';
 
   final String roomId;
+  final Profile otherUserProfile;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ChatCubit()..setMessagesListener(roomId),
-      child: PrivateChatView(),
+      child: PrivateChatView(
+        otherUserProfile: otherUserProfile,
+      ),
     );
   }
 }
@@ -37,7 +44,10 @@ class PrivateChatScreen extends StatelessWidget {
 class PrivateChatView extends StatefulWidget {
   const PrivateChatView({
     super.key,
+    required this.otherUserProfile,
   });
+
+  final Profile otherUserProfile;
 
   @override
   State<PrivateChatView> createState() => _PrivateChatViewState();
@@ -73,12 +83,14 @@ class _PrivateChatViewState extends State<PrivateChatView> {
       appBar: AppBar(
         title: Row(
           children: [
-            const CircleAvatar(),
+            CircleAvatar(
+              child: Text(widget.otherUserProfile.fullName.substring(0, 2)),
+            ),
             const SizedBox(
               width: 10,
             ),
             Text(
-              'Dr. Juan Perez',
+              widget.otherUserProfile.fullName,
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
@@ -91,12 +103,12 @@ class _PrivateChatViewState extends State<PrivateChatView> {
             onPressed: () {},
             icon: const Icon(Icons.video_call_sharp),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const FaIcon(
-              FontAwesomeIcons.ellipsisVertical,
-            ),
-          ),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const FaIcon(
+          //     FontAwesomeIcons.ellipsisVertical,
+          //   ),
+          // ),
         ],
       ),
       body: Column(
@@ -104,12 +116,6 @@ class _PrivateChatViewState extends State<PrivateChatView> {
           Expanded(
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
-                if (state is ChatInitial) {
-                  context.loaderOverlay.show();
-                } else {
-                  context.loaderOverlay.hide();
-                }
-
                 if (state is ChatError) {
                   context.showErrorSnackBar(message: state.message);
                 }
@@ -212,7 +218,7 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                 } else if (state is ChatError) {
                   return Center(child: Text(state.message));
                 }
-                throw UnimplementedError();
+                return preloader;
               },
             ),
           ),
@@ -229,7 +235,9 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                 }
               },
               onAudioPressed: () {
-                print('audio pressed');
+                if (kDebugMode) {
+                  print('audio pressed');
+                }
               },
               onTapCloseReply: () {
                 setState(() {

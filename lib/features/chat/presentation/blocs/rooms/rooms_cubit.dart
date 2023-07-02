@@ -28,9 +28,9 @@ class RoomCubit extends Cubit<RoomState> {
   bool _haveCalledGetRooms = false;
 
   Future<void> initializeRooms(BuildContext context) async {
-    if (_haveCalledGetRooms) {
-      return;
-    }
+    // if (_haveCalledGetRooms) {
+    //   return;
+    // }
     _haveCalledGetRooms = true;
 
     _myUserId = supabase.auth.currentUser!.id;
@@ -49,6 +49,7 @@ class RoomCubit extends Cubit<RoomState> {
     }
 
     final rows = List<Map<String, dynamic>>.from(data);
+
     _newUsers = rows.map(Profile.fromJson).toList();
 
     /// Get realtime updates on rooms that the user is in
@@ -68,10 +69,12 @@ class RoomCubit extends Cubit<RoomState> {
         _getNewestMessage(context: context, roomId: room.id);
         BlocProvider.of<ProfilesCubit>(context).getProfile(room.otherUserId);
       }
-      emit(RoomsLoaded(
-        newUsers: _newUsers,
-        rooms: _rooms,
-      ));
+      emit(
+        RoomsLoaded(
+          newUsers: _newUsers,
+          rooms: _rooms,
+        ),
+      );
     }, onError: (error) {
       emit(RoomsError('Error loading rooms'));
     });

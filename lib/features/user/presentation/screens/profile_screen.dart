@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:doctor_fy/core/constants/constants.dart';
 import 'package:doctor_fy/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,7 +57,8 @@ class ProfileView extends StatelessWidget {
           SizedBox(
             width: 300.w,
             child: Text(
-              'Nelson Tomas Aranda Barboza',
+              supabase.auth.currentSession!.user.userMetadata!['fullName']
+                  as String,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             ),

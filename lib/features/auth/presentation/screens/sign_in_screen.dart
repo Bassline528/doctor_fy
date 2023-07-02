@@ -1,3 +1,4 @@
+import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/widgets/doctor_fy_component.dart';
@@ -28,9 +29,6 @@ class _SignInScreenState extends State<SignInScreen> {
     _formKey = GlobalKey<FormState>();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    //SOLO PARA PRUEBAS TODO: BORRAR
-    _emailController.text = 'user2@user.com';
-    _passwordController.text = 'hola123';
     _passwordOscure = true;
     super.initState();
   }
@@ -80,11 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
               if (state is SignInError) {
                 context.loaderOverlay.hide();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                  ),
-                );
+                context.showErrorSnackBar(message: state.message);
                 return;
               }
             },

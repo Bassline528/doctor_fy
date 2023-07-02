@@ -78,6 +78,7 @@ class BubbleNormal extends StatelessWidget {
                 ),
               )
             : Container(),
+        if (isSender) Text(time),
         Container(
           color: Colors.transparent,
           constraints:
@@ -128,9 +129,7 @@ class BubbleNormal extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
-        Text(time),
-        const SizedBox(width: 60),
+        if (!isSender) Text(time),
       ],
     );
   }
