@@ -78,7 +78,6 @@ class BubbleNormal extends StatelessWidget {
                 ),
               )
             : Container(),
-        if (isSender) Text(time),
         Container(
           color: Colors.transparent,
           constraints:
@@ -109,10 +108,16 @@ class BubbleNormal extends StatelessWidget {
                     padding: stateTick
                         ? EdgeInsets.fromLTRB(12, 6, 28, 6)
                         : EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                    child: Text(
-                      text,
-                      style: textStyle,
-                      textAlign: TextAlign.left,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          text,
+                          style: textStyle,
+                          textAlign: TextAlign.left,
+                        ),
+                        Text(time),
+                      ],
                     ),
                   ),
                   stateIcon != null && stateTick
@@ -129,7 +134,6 @@ class BubbleNormal extends StatelessWidget {
             ),
           ),
         ),
-        if (!isSender) Text(time),
       ],
     );
   }

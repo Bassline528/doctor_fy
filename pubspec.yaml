@@ -1,4 +1,4 @@
-name: Doctorfy
+name: doctor_fy
 description: New doctor fy app
 version: 1.0.0+1
 publish_to: none
@@ -57,7 +57,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#000000"
-  image: assets/images/doctorfy_logo.png
+  image: true
   color_dark: "#000000"
   android_12:
     image: assets/images/doctorfy_logo.png

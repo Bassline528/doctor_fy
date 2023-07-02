@@ -34,7 +34,6 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   await runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      GetIt.I.registerSingleton<SupabaseClient>(Supabase.instance.client);
       try {
         await dotenv.load();
       } catch (e) {
@@ -46,6 +45,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         url: dotenv.env['SUPABASE_URL']!,
         anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
       );
+      GetIt.I.registerSingleton<SupabaseClient>(Supabase.instance.client);
       runApp(await builder());
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
