@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -33,6 +34,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   await runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      GetIt.I.registerSingleton<SupabaseClient>(Supabase.instance.client);
       try {
         await dotenv.load();
       } catch (e) {
