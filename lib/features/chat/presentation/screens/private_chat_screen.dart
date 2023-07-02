@@ -8,14 +8,13 @@ import 'package:doctor_fy/core/constants/constants.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
 import 'package:doctor_fy/features/user/data/entities/profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:loader_overlay/loader_overlay.dart';
-import 'package:swipe_to/swipe_to.dart';
-import 'package:timeago/timeago.dart';
+import 'package:intl/intl.dart';
 
 enum AttachmentType { image, video, file, location }
 
@@ -78,7 +77,6 @@ class _PrivateChatViewState extends State<PrivateChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -89,11 +87,15 @@ class _PrivateChatViewState extends State<PrivateChatView> {
             const SizedBox(
               width: 10,
             ),
-            Text(
-              widget.otherUserProfile.fullName,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+            Flexible(
+              child: Text(
+                widget.otherUserProfile.fullName,
+                maxLines: 2,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ],
@@ -103,12 +105,12 @@ class _PrivateChatViewState extends State<PrivateChatView> {
             onPressed: () {},
             icon: const Icon(Icons.video_call_sharp),
           ),
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const FaIcon(
-          //     FontAwesomeIcons.ellipsisVertical,
-          //   ),
-          // ),
+          IconButton(
+            onPressed: () {},
+            icon: const FaIcon(
+              FontAwesomeIcons.ellipsisVertical,
+            ),
+          ),
         ],
       ),
       body: Column(
@@ -142,9 +144,10 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                             color: context.theme.colorScheme.onPrimary,
                           ),
                           isSender: state.messages[index].isMine,
-                          time: format(
-                            state.messages[index].createdAt,
-                            locale: 'en_short',
+                          time: DateFormat.jm().format(
+                            DateTime.parse(
+                              state.messages[index].createdAt.toString(),
+                            ),
                           ),
                         ),
                       )
@@ -287,24 +290,24 @@ class _PrivateChatViewState extends State<PrivateChatView> {
       context: context,
       actions: [
         const SheetAction(
-          icon: Icons.image,
+          icon: FontAwesomeIcons.image,
           label: 'Imagen',
           key: AttachmentType.image,
         ),
         const SheetAction(
-          icon: Icons.image,
+          icon: FontAwesomeIcons.video,
           label: 'Video',
           key: AttachmentType.video,
         ),
         const SheetAction(
-          icon: Icons.image,
+          icon: FontAwesomeIcons.file,
           label: 'Archivo',
           key: AttachmentType.file,
         ),
         const SheetAction(
           label: 'Localización',
           key: AttachmentType.location,
-          icon: Icons.location_on,
+          icon: FontAwesomeIcons.locationPin,
         ),
       ],
     );

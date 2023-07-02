@@ -121,10 +121,8 @@ class BubbleNormal extends StatelessWidget {
                         Text(
                           time,
                           style: TextStyle(
-                            color: isSender
-                                ? Theme.of(context).colorScheme.onSecondary
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
+                              fontSize: 10,
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                       ],
                     ),
