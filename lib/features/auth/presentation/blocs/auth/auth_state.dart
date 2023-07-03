@@ -31,6 +31,16 @@ class SignInError extends AuthState {
   List<Object> get props => [message];
 }
 
+class SignOutError extends AuthState {
+  const SignOutError(this.message);
+  final String message;
+
+  @override
+  List<Object> get props => [message];
+}
+
+class SignOutInProgress extends AuthState {}
+
 class SignUpError extends AuthState {
   const SignUpError(this.message);
   final String message;

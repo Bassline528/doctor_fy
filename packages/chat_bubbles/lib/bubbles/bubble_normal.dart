@@ -22,6 +22,7 @@ class BubbleNormal extends StatelessWidget {
   final bool sent;
   final bool delivered;
   final bool seen;
+  final String time;
   final TextStyle? textStyle;
 
   BubbleNormal({
@@ -35,6 +36,7 @@ class BubbleNormal extends StatelessWidget {
     this.delivered = false,
     this.seen = false,
     this.textStyle,
+    required this.time,
   }) : super(key: key);
 
   ///chat bubble builder method
@@ -106,10 +108,23 @@ class BubbleNormal extends StatelessWidget {
                     padding: stateTick
                         ? EdgeInsets.fromLTRB(12, 6, 28, 6)
                         : EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                    child: Text(
-                      text,
-                      style: textStyle,
-                      textAlign: TextAlign.left,
+                    child: Column(
+                      crossAxisAlignment: isSender
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          text,
+                          style: textStyle,
+                          textAlign: TextAlign.left,
+                        ),
+                        Text(
+                          time,
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
+                      ],
                     ),
                   ),
                   stateIcon != null && stateTick

@@ -1,15 +1,16 @@
 import 'package:doctor_fy/core/helpers/terms_helper.dart';
+import 'package:doctor_fy/features/auth/data/models/sign_up_request.dart';
 import 'package:doctor_fy/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/widgets/date_picker_field.dart';
 import 'package:doctor_fy/features/auth/presentation/widgets/doctor_fy_component.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -22,7 +23,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   late GlobalKey<FormState> _formKey;
-  late TextEditingController _namesControlles;
+  late TextEditingController _fullNameController;
   late TextEditingController _userNameController;
   late TextEditingController _emailController;
   late TextEditingController _dniController;
@@ -39,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
-    _namesControlles = TextEditingController();
+    _fullNameController = TextEditingController();
     _userNameController = TextEditingController();
     _dniController = TextEditingController();
     _birthDateController = TextEditingController();
@@ -54,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    _namesControlles.dispose();
+    _fullNameController.dispose();
     _userNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -67,14 +68,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      final username = _usernameController.text;
       context.read<AuthBloc>().add(
             SignUpWithEmailAndPassword(
-              email: email,
-              password: password,
-              username: username,
+              signUpRequest: SignUpRequest(
+                email: _emailController.text,
+                password: _passwordController.text,
+                fullName: _fullNameController.text,
+                username: _userNameController.text,
+                ci: _dniController.text,
+                birthDate: _birthDateController.text,
+                phoneNumber: _phoneNumberController.text,
+                gender: _selectedSex!.substring(0, 1).toUpperCase(),
+              ),
             ),
           );
     }
@@ -95,8 +100,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is SignUpSuccess) {
-                //TODO: SHOW SNACKBAR MESSAGE
+                context.loaderOverlay.hide();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Registro exitoso'),
+                  ),
+                );
                 context.go(SignInScreen.routeName);
+                return;
+              }
+
+              if (state is SignUpError) {
+                context.loaderOverlay.hide();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                  ),
+                );
+                return;
+              }
+
+              if (state is SignUpInProgress) {
+                context.loaderOverlay.show();
+                return;
               }
             },
             builder: (context, state) {
@@ -104,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   const DoctorFy(),
                   TextFormField(
-                    controller: _namesControlles,
+                    controller: _fullNameController,
                     decoration: const InputDecoration(
                       label: Text('Nombre y Apellido'),
                     ),

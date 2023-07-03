@@ -122,9 +122,11 @@ class MessageBar extends StatelessWidget {
                 : Container(),
             Container(
               color: messageBarColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 16,
+              padding: const EdgeInsets.only(
+                top: 8,
+                bottom: 20,
+                left: 16,
+                right: 16,
               ),
               child: Row(
                 children: <Widget>[
@@ -143,7 +145,7 @@ class MessageBar extends StatelessWidget {
                           hintText: hintText ?? "Type your message here",
                           hintMaxLines: 1,
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 10),
+                              horizontal: 8.0, vertical: 5),
                           hintStyle: TextStyle(
                             fontSize: 16,
                           ),

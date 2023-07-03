@@ -16,6 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   dartz: ^0.10.1
   dio: ^5.2.1+1
+  email_validator: ^2.1.17
   equatable: ^2.0.5
   flutter:
     sdk: flutter
@@ -36,6 +37,7 @@ dependencies:
   intl: ^0.18.0
   intl_phone_field: ^3.2.0
   loader_overlay: ^2.2.0
+  loading_animation_widget: ^1.2.0+4
   permission_handler: ^10.3.0
   settings_ui: ^2.0.2
   share_plus: ^7.0.2
@@ -43,6 +45,7 @@ dependencies:
   shimmer: ^3.0.0
   supabase_flutter: ^1.10.4
   swipe_to: ^1.0.2
+  timeago: ^3.4.0
 
 dev_dependencies:
   bloc_test: ^9.1.1
@@ -54,7 +57,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#000000"
-  image: assets/images/doctorfy_logo.png
+  image: true
   color_dark: "#000000"
   android_12:
     image: assets/images/doctorfy_logo.png
@@ -65,10 +68,12 @@ flutter_native_splash:
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  ios: true
+  ios: "assets/images/doctorfy_logo_negro.png"
   image_path: "assets/images/doctorfy_logo_negro.png"
+  image_path_ios: "assets/images/doctorfy_logo_negro.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   adaptive_icon_background: "#000000"
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -44,6 +45,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         url: dotenv.env['SUPABASE_URL']!,
         anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
       );
+      GetIt.I.registerSingleton<SupabaseClient>(Supabase.instance.client);
       runApp(await builder());
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),

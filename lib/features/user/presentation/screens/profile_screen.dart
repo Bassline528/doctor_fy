@@ -1,11 +1,42 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:doctor_fy/core/constants/constants.dart';
+import 'package:doctor_fy/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = '/profile';
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is SignOutInProgress) {
+          context.loaderOverlay.show();
+          return;
+        }
+
+        if (state is AuthInitial) {
+          context.loaderOverlay.hide();
+          context.go('/sign_in');
+          return;
+        }
+      },
+      child: const ProfileView(),
+    );
+  }
+}
+
+class ProfileView extends StatelessWidget {
+  const ProfileView({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +57,8 @@ class ProfileScreen extends StatelessWidget {
           SizedBox(
             width: 300.w,
             child: Text(
-              'Nelson Tomas Aranda Barboza',
+              supabase.auth.currentSession!.user.userMetadata!['fullName']
+                  as String,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             ),
@@ -68,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
             title: const Text('Configuraciones'),
             onTap: () => context.push('/settings'),
           ),
-          Spacer(),
+          const Spacer(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar sesión'),
@@ -81,7 +113,9 @@ class ProfileScreen extends StatelessWidget {
                 cancelLabel: 'No',
               );
 
-              if (result == OkCancelResult.ok) context.go('/sign_in');
+              if (result == OkCancelResult.ok) {
+                context.read<AuthBloc>().add(SignOut());
+              }
             },
           ),
         ],
