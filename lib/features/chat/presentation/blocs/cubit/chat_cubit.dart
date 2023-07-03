@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:doctor_fy/core/constants/constants.dart';
 import 'package:doctor_fy/features/chat/data/entities/message.dart';
-import 'package:meta/meta.dart';
 
 part 'chat_state.dart';
 
@@ -17,6 +16,9 @@ class ChatCubit extends Cubit<ChatState> {
   late final String _myUserId;
 
   void setMessagesListener(String roomId) {
+    if (state is! ChatInitial) {
+      return;
+    }
     _roomId = roomId;
 
     _myUserId = supabase.auth.currentUser!.id;
@@ -26,10 +28,15 @@ class ChatCubit extends Cubit<ChatState> {
         .stream(primaryKey: ['id'])
         .eq('room_id', roomId)
         .order('created_at', ascending: true)
+        .limit(100)
         .map<List<Message>>(
           (data) => data
               .map<Message>(
-                  (row) => Message.fromMap(map: row, myUserId: _myUserId))
+                (row) => Message.fromMap(
+                  map: row,
+                  myUserId: _myUserId,
+                ),
+              )
               .toList(),
         )
         .listen((messages) {

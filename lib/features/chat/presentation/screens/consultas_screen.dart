@@ -1,6 +1,7 @@
 import 'package:doctor_fy/core/constants/constants.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/core/widgets/no_data.dart';
+import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/profiles/profiles_cubit.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/rooms/rooms_cubit.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/categorias_screens.dart';
@@ -99,32 +100,38 @@ class RoomsView extends StatelessWidget {
                             final room = rooms[index];
                             final otherUser = profiles[room.otherUserId];
 
-                            return ListTile(
-                              onTap: () => context.push(
-                                '/chat/${room.id}',
-                                extra: otherUser,
-                              ),
-                              leading: CircleAvatar(
-                                child: otherUser == null
-                                    ? preloader
-                                    : Text(otherUser.username.substring(0, 2)),
-                              ),
-                              title: Text(
-                                otherUser == null
-                                    ? 'Cargando...'
-                                    : otherUser.username,
-                              ),
-                              subtitle: room.lastMessage != null
-                                  ? Text(
-                                      room.lastMessage!.content,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  : const Text('Chat creado'),
-                              trailing: Text(
-                                format(
-                                  room.lastMessage?.createdAt ?? room.createdAt,
-                                  locale: 'en_short',
+                            return BlocProvider(
+                              create: (context) => ChatCubit(),
+                              child: ListTile(
+                                onTap: () => context.push(
+                                  '/chat/${room.id}',
+                                  extra: [otherUser, context.read<ChatCubit>()],
+                                ),
+                                leading: CircleAvatar(
+                                  child: otherUser == null
+                                      ? preloader
+                                      : Text(
+                                          otherUser.username.substring(0, 2),
+                                        ),
+                                ),
+                                title: Text(
+                                  otherUser == null
+                                      ? 'Cargando...'
+                                      : otherUser.username,
+                                ),
+                                subtitle: room.lastMessage != null
+                                    ? Text(
+                                        room.lastMessage!.content,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : const Text('Chat creado'),
+                                trailing: Text(
+                                  format(
+                                    room.lastMessage?.createdAt ??
+                                        room.createdAt,
+                                    locale: 'en_short',
+                                  ),
                                 ),
                               ),
                             );

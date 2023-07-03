@@ -5,10 +5,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:doctor_fy/core/constants/constants.dart';
+import 'package:doctor_fy/core/helpers/date_helper.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
+import 'package:doctor_fy/features/chat/data/entities/message.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
 import 'package:doctor_fy/features/user/data/entities/profile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,31 +23,25 @@ class PrivateChatScreen extends StatelessWidget {
   const PrivateChatScreen({
     super.key,
     required this.roomId,
-    required this.otherUserProfile,
   });
   static const String routeName = 'chat';
 
   final String roomId;
-  final Profile otherUserProfile;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChatCubit()..setMessagesListener(roomId),
-      child: PrivateChatView(
-        otherUserProfile: otherUserProfile,
-      ),
-    );
+    // return BlocProvider(
+    //   create: (context) => ChatCubit()..setMessagesListener(roomId),
+    //   child: PrivateChatView(),
+    // );
+    return PrivateChatView();
   }
 }
 
 class PrivateChatView extends StatefulWidget {
   const PrivateChatView({
     super.key,
-    required this.otherUserProfile,
   });
-
-  final Profile otherUserProfile;
 
   @override
   State<PrivateChatView> createState() => _PrivateChatViewState();
@@ -82,14 +77,14 @@ class _PrivateChatViewState extends State<PrivateChatView> {
         title: Row(
           children: [
             CircleAvatar(
-              child: Text(widget.otherUserProfile.fullName.substring(0, 2)),
+              child: Text('T'),
             ),
             const SizedBox(
               width: 10,
             ),
             Flexible(
               child: Text(
-                widget.otherUserProfile.fullName,
+                'Test',
                 maxLines: 2,
                 style: TextStyle(
                   fontSize: 16.sp,
@@ -132,25 +127,9 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                 } else if (state is ChatLoaded) {
                   return SingleChildScrollView(
                     child: Column(
-                      children: List.generate(
-                        state.messages.length,
-                        (index) => BubbleNormal(
-                          text: state.messages[index].content,
-                          color: state.messages[index].isMine
-                              ? context.theme.colorScheme.primary
-                              : context.theme.colorScheme.secondary,
-                          textStyle: TextStyle(
-                            fontSize: 14.sp,
-                            color: context.theme.colorScheme.onPrimary,
-                          ),
-                          isSender: state.messages[index].isMine,
-                          time: DateFormat.jm().format(
-                            DateTime.parse(
-                              state.messages[index].createdAt.toString(),
-                            ),
-                          ),
-                        ),
-                      )
+                      children: [
+                        ..._buildMessageWidgets(state.messages),
+                      ]
                       // <Widget>[
 
                       // DateChip(
@@ -267,6 +246,35 @@ class _PrivateChatViewState extends State<PrivateChatView> {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildMessageWidgets(List<Message> messages) {
+    final widgets = <Widget>[];
+
+    DateTime? previousDate;
+    for (final message in messages) {
+      final currentDate = message.createdAt;
+      if (previousDate == null || !isSameDay(previousDate, currentDate)) {
+        widgets.add(DateChip(date: currentDate));
+      }
+      widgets.add(
+        BubbleNormal(
+          text: message.content,
+          color: message.isMine
+              ? context.theme.colorScheme.primary
+              : context.theme.colorScheme.secondary,
+          textStyle: TextStyle(
+            fontSize: 14.sp,
+            color: context.theme.colorScheme.onPrimary,
+          ),
+          isSender: message.isMine,
+          time: DateFormat.jm().format(message.createdAt),
+        ),
+      );
+      previousDate = currentDate;
+    }
+
+    return widgets;
   }
 
   Widget _image() {

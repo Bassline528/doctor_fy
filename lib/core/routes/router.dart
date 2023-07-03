@@ -2,6 +2,7 @@ import 'package:doctor_fy/features/auth/presentation/screens/forgot_password_scr
 import 'package:doctor_fy/features/auth/presentation/screens/onboarding_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:doctor_fy/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/categorias_screens.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/private_chat_screen.dart';
 import 'package:doctor_fy/features/chat/presentation/screens/professionals_screen.dart';
@@ -10,6 +11,7 @@ import 'package:doctor_fy/features/splash/presentation/screens/splash_screen.dar
 import 'package:doctor_fy/features/user/data/entities/profile.dart';
 import 'package:doctor_fy/features/user/presentation/screens/configuraciones_screen.dart';
 import 'package:doctor_fy/features/user/presentation/screens/home_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
@@ -22,10 +24,15 @@ final router = GoRouter(
         GoRoute(
           path: 'chat/:id',
           builder: (context, state) {
-            Profile otherUserProfile = state.extra as Profile;
-            return PrivateChatScreen(
-              otherUserProfile: otherUserProfile,
-              roomId: state.pathParameters['id']!,
+            ChatCubit chatCubit = state.extra as ChatCubit;
+            return BlocProvider<ChatCubit>.value(
+              value: chatCubit
+                ..setMessagesListener(
+                  state.pathParameters['id']!,
+                ),
+              child: PrivateChatScreen(
+                roomId: state.pathParameters['id']!,
+              ),
             );
           },
         ),
