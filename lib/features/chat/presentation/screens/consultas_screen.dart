@@ -54,24 +54,12 @@ class RoomsView extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is RoomsEmpty) {
-            final newUsers = state.newUsers;
-            return Column(
-              children: [
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: _NewUsers(newUsers: newUsers),
-                // ),
-                Expanded(
-                  child: const NoDataToShow(
-                    noDataText:
-                        'No hay chats disponibles, empieza una consulta!',
-                    child: Icon(
-                      Icons.chat_bubble_outlined,
-                      size: 100,
-                    ),
-                  ),
-                ),
-              ],
+            return const NoDataToShow(
+              noDataText: 'No hay chats disponibles, empieza una consulta!',
+              child: Icon(
+                Icons.chat_bubble_outlined,
+                size: 100,
+              ),
             );
           } else if (state is RoomsLoading) {
             return preloader;
@@ -101,38 +89,43 @@ class RoomsView extends StatelessWidget {
                             final otherUser = profiles[room.otherUserId];
 
                             return BlocProvider(
-                              create: (context) => ChatCubit(),
-                              child: ListTile(
-                                onTap: () => context.push(
-                                  '/chat/${room.id}',
-                                  extra: [otherUser, context.read<ChatCubit>()],
-                                ),
-                                leading: CircleAvatar(
-                                  child: otherUser == null
-                                      ? preloader
-                                      : Text(
-                                          otherUser.username.substring(0, 2),
-                                        ),
-                                ),
-                                title: Text(
-                                  otherUser == null
-                                      ? 'Cargando...'
-                                      : otherUser.username,
-                                ),
-                                subtitle: room.lastMessage != null
-                                    ? Text(
-                                        room.lastMessage!.content,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                    : const Text('Chat creado'),
-                                trailing: Text(
-                                  format(
-                                    room.lastMessage?.createdAt ??
-                                        room.createdAt,
-                                    locale: 'en_short',
-                                  ),
-                                ),
+                              create: (_) => ChatCubit(),
+                              child: Builder(
+                                builder: (newContext) {
+                                  return ListTile(
+                                    onTap: () => newContext.push(
+                                      '/chat/${room.id}',
+                                      extra: newContext.read<ChatCubit>(),
+                                    ),
+                                    leading: CircleAvatar(
+                                      child: otherUser == null
+                                          ? preloader
+                                          : Text(
+                                              otherUser.username
+                                                  .substring(0, 2),
+                                            ),
+                                    ),
+                                    title: Text(
+                                      otherUser == null
+                                          ? 'Cargando...'
+                                          : otherUser.username,
+                                    ),
+                                    subtitle: room.lastMessage != null
+                                        ? Text(
+                                            room.lastMessage!.content,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          )
+                                        : const Text('Chat creado'),
+                                    trailing: Text(
+                                      format(
+                                        room.lastMessage?.createdAt ??
+                                            room.createdAt,
+                                        locale: 'en_short',
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             );
                           },

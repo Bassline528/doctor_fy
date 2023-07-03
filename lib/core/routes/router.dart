@@ -24,8 +24,8 @@ final router = GoRouter(
         GoRoute(
           path: 'chat/:id',
           builder: (context, state) {
-            ChatCubit chatCubit = state.extra as ChatCubit;
-            return BlocProvider<ChatCubit>.value(
+            final chatCubit = state.extra as ChatCubit;
+            return BlocProvider.value(
               value: chatCubit
                 ..setMessagesListener(
                   state.pathParameters['id']!,
