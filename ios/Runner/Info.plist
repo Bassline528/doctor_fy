@@ -53,6 +53,12 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>$(PRODUCT_NAME) uses photos for chat messages</string>
+		<key>NSCameraUsageDescription</key>
+		<string>$(PRODUCT_NAME) uses camera for chat messages</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>$(PRODUCT_NAME) uses microphone for chat messages</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 		<key>CFBundleURLTypes</key>

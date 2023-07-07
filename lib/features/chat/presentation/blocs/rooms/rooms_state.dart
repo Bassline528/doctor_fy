@@ -1,11 +1,11 @@
 part of 'rooms_cubit.dart';
 
 @immutable
-abstract class RoomState {}
+abstract class RoomsState {}
 
-class RoomsLoading extends RoomState {}
+class RoomsLoading extends RoomsState {}
 
-class RoomsLoaded extends RoomState {
+class RoomsLoaded extends RoomsState {
   final List<Profile> newUsers;
   final List<Room> rooms;
 
@@ -15,13 +15,13 @@ class RoomsLoaded extends RoomState {
   });
 }
 
-class RoomsEmpty extends RoomState {
+class RoomsEmpty extends RoomsState {
   final List<Profile> newUsers;
 
   RoomsEmpty({required this.newUsers});
 }
 
-class RoomsError extends RoomState {
+class RoomsError extends RoomsState {
   final String message;
 
   RoomsError(this.message);

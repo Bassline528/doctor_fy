@@ -24,7 +24,9 @@ final router = GoRouter(
         GoRoute(
           path: 'chat/:id',
           builder: (context, state) {
-            final chatCubit = state.extra as ChatCubit;
+            final extra = state.extra as Map<String, dynamic>;
+            final chatCubit = extra['chatCubit'] as ChatCubit;
+            final otherUserProfile = extra['otherUser'] as Profile;
             return BlocProvider.value(
               value: chatCubit
                 ..setMessagesListener(
@@ -32,6 +34,7 @@ final router = GoRouter(
                 ),
               child: PrivateChatScreen(
                 roomId: state.pathParameters['id']!,
+                otherUser: otherUserProfile,
               ),
             );
           },

@@ -46,7 +46,7 @@ class RoomsView extends StatelessWidget {
         },
         child: const FaIcon(FontAwesomeIcons.paperPlane),
       ),
-      body: BlocConsumer<RoomCubit, RoomState>(
+      body: BlocConsumer<RoomsCubit, RoomsState>(
         listener: (context, state) {
           if (state is RoomsError) {
             context.showErrorSnackBar(message: state.message);
@@ -95,7 +95,11 @@ class RoomsView extends StatelessWidget {
                                   return ListTile(
                                     onTap: () => newContext.push(
                                       '/chat/${room.id}',
-                                      extra: newContext.read<ChatCubit>(),
+                                      extra: {
+                                        'chatCubit':
+                                            newContext.read<ChatCubit>(),
+                                        'otherUser': otherUser,
+                                      },
                                     ),
                                     leading: CircleAvatar(
                                       child: otherUser == null
@@ -164,7 +168,7 @@ class _NewUsers extends StatelessWidget {
               (user) => InkWell(
                 onTap: () async {
                   try {
-                    final roomId = await BlocProvider.of<RoomCubit>(context)
+                    final roomId = await BlocProvider.of<RoomsCubit>(context)
                         .createRoom(user.id);
                     // delay 300 miliseconds
                     await Future<void>.delayed(

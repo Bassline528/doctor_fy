@@ -12,8 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'rooms_state.dart';
 
-class RoomCubit extends Cubit<RoomState> {
-  RoomCubit() : super(RoomsLoading());
+class RoomsCubit extends Cubit<RoomsState> {
+  RoomsCubit() : super(RoomsLoading());
 
   final Map<String, StreamSubscription<Message?>> _messageSubscriptions = {};
 
@@ -28,9 +28,9 @@ class RoomCubit extends Cubit<RoomState> {
   bool _haveCalledGetRooms = false;
 
   Future<void> initializeRooms(BuildContext context) async {
-    // if (_haveCalledGetRooms) {
-    //   return;
-    // }
+    if (_haveCalledGetRooms) {
+      return;
+    }
     _haveCalledGetRooms = true;
 
     _myUserId = supabase.auth.currentUser!.id;

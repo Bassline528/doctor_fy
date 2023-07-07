@@ -9,6 +9,8 @@ import 'package:doctor_fy/core/helpers/date_helper.dart';
 import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/features/chat/data/entities/message.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
+import 'package:doctor_fy/features/chat/presentation/widgets/attach_modal.dart';
+import 'package:doctor_fy/features/chat/presentation/widgets/user_avatar.dart';
 import 'package:doctor_fy/features/user/data/entities/profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,25 +25,31 @@ class PrivateChatScreen extends StatelessWidget {
   const PrivateChatScreen({
     super.key,
     required this.roomId,
+    required this.otherUser,
   });
   static const String routeName = 'chat';
 
   final String roomId;
+  final Profile otherUser;
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider(
-    //   create: (context) => ChatCubit()..setMessagesListener(roomId),
-    //   child: PrivateChatView(),
-    // );
-    return PrivateChatView();
+    return PrivateChatView(
+      roomId: roomId,
+      otherUser: otherUser,
+    );
   }
 }
 
 class PrivateChatView extends StatefulWidget {
   const PrivateChatView({
     super.key,
+    required this.roomId,
+    required this.otherUser,
   });
+
+  final String roomId;
+  final Profile otherUser;
 
   @override
   State<PrivateChatView> createState() => _PrivateChatViewState();
@@ -49,6 +57,7 @@ class PrivateChatView extends StatefulWidget {
 
 class _PrivateChatViewState extends State<PrivateChatView> {
   late TextEditingController _messageController;
+  late ScrollController _scrollController;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = const Duration();
   Duration position = const Duration();
@@ -61,6 +70,8 @@ class _PrivateChatViewState extends State<PrivateChatView> {
   @override
   void initState() {
     _messageController = TextEditingController();
+    _scrollController = ScrollController();
+
     super.initState();
   }
 
@@ -77,14 +88,14 @@ class _PrivateChatViewState extends State<PrivateChatView> {
         title: Row(
           children: [
             CircleAvatar(
-              child: Text('T'),
+              child: Text(widget.otherUser.fullName.substring(0, 2)),
             ),
             const SizedBox(
               width: 10,
             ),
             Flexible(
               child: Text(
-                'Test',
+                widget.otherUser.fullName,
                 maxLines: 2,
                 style: TextStyle(
                   fontSize: 16.sp,
@@ -126,6 +137,7 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                   );
                 } else if (state is ChatLoaded) {
                   return SingleChildScrollView(
+                    controller: _scrollController,
                     child: Column(
                       children: [
                         ..._buildMessageWidgets(state.messages),
@@ -208,6 +220,7 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                 if (text.isNotEmpty) {
                   context.read<ChatCubit>().sendMessage(
                         _messageController.text,
+                        MessageType.texto,
                       );
                   _messageController.clear();
                 }
@@ -236,7 +249,7 @@ class _PrivateChatViewState extends State<PrivateChatView> {
               },
               actions: [
                 IconButton(
-                  onPressed: _attachmentModal,
+                  onPressed: () => attachmentModal(context),
                   icon: const Icon(
                     Icons.add,
                   ),
@@ -290,52 +303,6 @@ class _PrivateChatViewState extends State<PrivateChatView> {
         errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );
-  }
-
-  Future<void> _attachmentModal() {
-    //show modal bottom sheet with options to send images, videos, etc
-    final result = showModalActionSheet<AttachmentType>(
-      context: context,
-      actions: [
-        const SheetAction(
-          icon: FontAwesomeIcons.image,
-          label: 'Imagen',
-          key: AttachmentType.image,
-        ),
-        const SheetAction(
-          icon: FontAwesomeIcons.video,
-          label: 'Video',
-          key: AttachmentType.video,
-        ),
-        const SheetAction(
-          icon: FontAwesomeIcons.file,
-          label: 'Archivo',
-          key: AttachmentType.file,
-        ),
-        const SheetAction(
-          label: 'Localización',
-          key: AttachmentType.location,
-          icon: FontAwesomeIcons.locationPin,
-        ),
-      ],
-    );
-
-    return result.then((value) {
-      switch (value) {
-        case AttachmentType.image:
-          //send image
-          break;
-        case AttachmentType.video:
-          //send video
-          break;
-        case AttachmentType.file:
-          //send file
-          break;
-        case AttachmentType.location:
-          //send location
-          break;
-      }
-    });
   }
 
   void _changeSeek(double value) {

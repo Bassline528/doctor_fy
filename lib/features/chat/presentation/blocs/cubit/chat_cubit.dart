@@ -49,7 +49,7 @@ class ChatCubit extends Cubit<ChatState> {
         });
   }
 
-  Future<void> sendMessage(String text) async {
+  Future<void> sendMessage(String text, MessageType type) async {
     /// Add message to present to the user right away
     final message = Message(
       id: 'new',
@@ -57,7 +57,7 @@ class ChatCubit extends Cubit<ChatState> {
       profileId: _myUserId,
       content: text,
       createdAt: DateTime.now(),
-      type: MessageType.texto,
+      type: type,
       isMine: true,
     );
     //insert last
