@@ -10,7 +10,7 @@ import 'package:doctor_fy/core/helpers/extensions/context_extensions.dart';
 import 'package:doctor_fy/features/chat/data/entities/message.dart';
 import 'package:doctor_fy/features/chat/presentation/blocs/cubit/chat_cubit.dart';
 import 'package:doctor_fy/features/chat/presentation/widgets/attach_modal.dart';
-import 'package:doctor_fy/features/chat/presentation/widgets/user_avatar.dart';
+
 import 'package:doctor_fy/features/user/data/entities/profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +64,8 @@ class _PrivateChatViewState extends State<PrivateChatView> {
   bool isPlaying = false;
   bool isLoading = false;
   bool isPause = false;
+
+  List<Widget> messagesComponents = <Widget>[];
 
   bool isReplying = false;
 
@@ -123,9 +125,13 @@ class _PrivateChatViewState extends State<PrivateChatView> {
         children: [
           Expanded(
             child: BlocConsumer<ChatCubit, ChatState>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if (state is ChatError) {
                   context.showErrorSnackBar(message: state.message);
+                }
+
+                if (state is ChatLoaded) {
+                  await _buildMessageWidgets(state.messages);
                 }
               },
               builder: (context, state) {
@@ -139,18 +145,16 @@ class _PrivateChatViewState extends State<PrivateChatView> {
                   return SingleChildScrollView(
                     controller: _scrollController,
                     child: Column(
-                      children: [
-                        ..._buildMessageWidgets(state.messages),
-                      ]
+                      children: [...messagesComponents]
                       // <Widget>[
 
                       // DateChip(
                       //   date: DateTime(now.year, now.month, now.day - 2),
-                      //   color: context.theme.colorScheme.surface,
-                      //   textStyle: TextStyle(
-                      //     fontSize: 14.sp,
-                      //     color: context.theme.colorScheme.onSurface,
-                      //   ),
+                      // color: context.theme.colorScheme.surface,
+                      // textStyle: TextStyle(
+                      //   fontSize: 14.sp,
+                      //   color: context.theme.colorScheme.onSurface,
+                      // ),
                       // ),
                       // BubbleNormalImage(
                       //   id: 'id001',
@@ -261,46 +265,68 @@ class _PrivateChatViewState extends State<PrivateChatView> {
     );
   }
 
-  List<Widget> _buildMessageWidgets(List<Message> messages) {
-    final widgets = <Widget>[];
+  Future<void> _buildMessageWidgets(List<Message> messages) async {
+    messagesComponents = <Widget>[];
 
     DateTime? previousDate;
     for (final message in messages) {
       final currentDate = message.createdAt;
       if (previousDate == null || !isSameDay(previousDate, currentDate)) {
-        widgets.add(DateChip(date: currentDate));
-      }
-      widgets.add(
-        BubbleNormal(
-          text: message.content,
-          color: message.isMine
-              ? context.theme.colorScheme.primary
-              : context.theme.colorScheme.secondary,
-          textStyle: TextStyle(
-            fontSize: 14.sp,
-            color: context.theme.colorScheme.onPrimary,
+        messagesComponents.add(
+          DateChip(
+            date: currentDate,
+            color: context.theme.colorScheme.surface,
+            textStyle: TextStyle(
+              fontSize: 14.sp,
+              color: context.theme.colorScheme.onSurface,
+            ),
           ),
-          isSender: message.isMine,
-          time: DateFormat.jm().format(message.createdAt),
-        ),
+        );
+      }
+      final widgetToAdd = await _getMessageBubbleByType(message);
+      messagesComponents.add(
+        widgetToAdd,
       );
       previousDate = currentDate;
     }
 
-    return widgets;
+    setState(() {});
   }
 
-  Widget _image() {
+  Future<Widget> _getMessageBubbleByType(Message message) async {
+    if (message.type == MessageType.texto) {
+      return BubbleNormal(
+        text: message.content,
+        color: message.isMine
+            ? context.theme.colorScheme.primary
+            : context.theme.colorScheme.secondary,
+        textStyle: TextStyle(
+          fontSize: 14.sp,
+          color: context.theme.colorScheme.onPrimary,
+        ),
+        isSender: message.isMine,
+        time: DateFormat.jm().format(message.createdAt),
+      );
+    }
+    final image = await _image(message.content);
+    return BubbleNormalImage(
+      id: 'id001',
+      image: image,
+      color: context.theme.colorScheme.secondary,
+      delivered: true,
+    );
+  }
+
+  Future<Widget> _image(String url) async {
+    final image = await supabase.storage.from('chat_images').download(url);
+
     return Container(
       constraints: const BoxConstraints(
         minHeight: 20,
         minWidth: 20,
       ),
-      child: CachedNetworkImage(
-        imageUrl: 'https://i.ibb.co/JCyT1kT/Asset-1.png',
-        progressIndicatorBuilder: (context, url, downloadProgress) =>
-            CircularProgressIndicator(value: downloadProgress.progress),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
+      child: Image.memory(
+        image,
       ),
     );
   }
